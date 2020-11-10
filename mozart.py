@@ -10,15 +10,16 @@ from musicref import *
 phraselength = 16
 
 class Composer:
-    def __init__(self, song=None, melodyTime=None):
+    def __init__(self, song=None, melodyTime=None, numMeasure=0):
         if not song:
-            progression  = [None] * phraselength
+            progression  = [None] * numMeasure
             melody = []
             for time in melodyTime:
                 melody.append([None, time])
             self.song = [melody, progression]
         else:
             self.song = song
+        self.numMeasure = numMeasure
 
     def melody(self):
         "The variable assignments for melody notes."
@@ -33,14 +34,14 @@ class Composer:
         newSong = deepcopy(self.song)
         noteRes = note.Note(pitch, quarterLength=self.song[0][number][1])
         newSong[0][number][0] = noteRes
-        return Composer(newSong, None)
+        return Composer(newSong, None, self.numMeasure)
 
     def setChord(self, number, chordpass):
         "Setting the chord at the number"
         newSong = deepcopy(self.song)
         chordRes = chord.Chord(keyVal[chordpass], quarterLength=4)
         newSong[1][number] = chordRes
-        return Composer(newSong, None)
+        return Composer(newSong, None, self.numMeasure)
 
     def melodyComplete(self):
         "Checks if melody assignment breaks any rules"
@@ -135,13 +136,13 @@ class Composer:
         random.shuffle(b)
         return b
 
-def generateMelodyTime():
+def generateMelodyTime(measures):
     possibleLengths = [0.25, 0.5, 1, 1.5, 2, 3, 4]
     result = []
     total = 0
-    while total < phraselength*4:
+    while total < measures*4:
         cur = random.choice(possibleLengths)
-        if total + cur <= phraselength*4:
+        if total + cur <= measures*4:
             result.append(cur)
             total += cur
     return result
@@ -170,8 +171,9 @@ def solveChordCSP(problem):
     return None
 
 def main():
-    timeArr = generateMelodyTime()
-    mozart = Composer(None, timeArr)
+    numMeasure = int(input("How many measures?\n"))
+    timeArr = generateMelodyTime(numMeasure)
+    mozart = Composer(None, timeArr, numMeasure)
     solvedChord = solveChordCSP(mozart)
     solvedBoth = solveMelodyCSP(solvedChord)
     #print stuff out to music software
