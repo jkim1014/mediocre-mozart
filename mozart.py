@@ -7,7 +7,7 @@ import random
 import math
 from musicref import *
 
-phraselength = 4
+phraselength = 16
 
 class Composer:
     def __init__(self, song=None, melodyTime=None):
@@ -180,9 +180,9 @@ def main():
     for chord in solvedChord.song[1]:
         streamChord.append(chord)
     #streamChord.show()
-    cl = instrument.Whistle()
+    # cl = instrument.Whistle()
     streamMelody = stream.Part()
-    streamMelody.insert(0, cl)
+    # streamMelody.insert(0, cl)
     for note in solvedBoth.song[0]:
         streamMelody.append(note[0])
     #streamMelody.show()
